@@ -1,20 +1,17 @@
-import './globals.css';
+import './globals.css'
 
 export const metadata = {
-  title: 'CRAS Digital - Gestão de Assistência Social',
-  description: 'Sistema interno para organização de prontuários e famílias',
-  manifest: '/manifest.json',
-};
+  title: 'CRAS Digital - São João da Ponta',
+  description: 'Sistema de Gestão de Assistência Social',
+}
 
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-br">
       <head>
-        <meta name="theme-color" content="#1e40af" />
+      <script src="https://cdn.tailwindcss.com"></script>
       </head>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
-  );
+  )
 }
