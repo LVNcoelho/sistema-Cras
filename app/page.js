@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Search, Users, BookOpen, Lock, LogOut, Save, X, UserPlus, ClipboardList, Loader2, Calendar, AlertCircle, BarChart3 } from 'lucide-react';
+import { Search, Users, BookOpen, Lock, LogOut, Save, X, UserPlus, ClipboardList, Loader2, Calendar, AlertCircle, BarChart3, UserCheck } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function SistemaCRAS() {
@@ -11,7 +11,13 @@ export default function SistemaCRAS() {
   const [buscando, setBuscando] = useState(false);
   const [busca, setBusca] = useState('');
   const [usuariosEncontrados, setUsuariosEncontrados] = useState([]);
-  const [formData, setFormData] = useState({ nome: '', cpf: '', nis: '', endereco: '' });
+  const [formData, setFormData] = useState({ nome_responsavel: '', cpf: '', nis: '', endereco: '' });
+
+  // Função para validar o login (simulado para o protótipo)
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setAutenticado(true);
+  };
 
   async function realizarBusca() {
     if (!busca) return;
@@ -30,21 +36,37 @@ export default function SistemaCRAS() {
     else {
       alert("Usuário cadastrado com sucesso!");
       setMostrarForm(false);
-      setFormData({ nome: '', cpf: '', nis: '', endereco: '' });
+      setFormData({ nome_responsavel: '', cpf: '', nis: '', endereco: '' });
       realizarBusca();
     }
     setLoading(false);
   }
 
+  // TELA DE LOGIN (COM USUÁRIO E SENHA DE VOLTA)
   if (!autenticado) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
-        <div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md border-t-8 border-blue-700">
-          <div className="text-center mb-8">
-            <img src="/brasao.sjp.jfif" className="w-20 mx-auto mb-4 bg-white p-1 rounded-lg shadow-sm" />
-            <h1 className="text-2xl font-bold text-blue-900 uppercase">Gestor SUAS SJP</h1>
+      <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4 font-sans text-lg">
+        <div className="bg-white p-12 rounded-[40px] shadow-2xl w-full max-w-lg border-t-[12px] border-blue-700 animate-in fade-in zoom-in duration-300">
+          <div className="text-center mb-10">
+            <img src="/brasao.sjp.jfif" className="w-32 mx-auto mb-6 bg-white p-2 rounded-2xl shadow-sm border" />
+            <h1 className="text-3xl font-bold text-blue-900 uppercase tracking-tight">Portal do Gestor</h1>
+            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest mt-1">São João da Ponta - PA</p>
           </div>
-          <button onClick={() => setAutenticado(true)} className="w-full bg-blue-700 text-white p-4 rounded-xl font-bold hover:bg-blue-800 transition-all shadow-lg shadow-blue-200">Acessar Portal Técnico</button>
+          
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-500 uppercase ml-2 tracking-wider">Identificação / CPF</label>
+              <input type="text" placeholder="000.000.000-00" className="w-full p-6 bg-slate-50 border-2 border-slate-100 rounded-3xl outline-none focus:border-blue-700 text-2xl font-medium transition-all" required />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-500 uppercase ml-2 tracking-wider">Senha de Acesso</label>
+              <input type="password" placeholder="••••••••" className="w-full p-6 bg-slate-50 border-2 border-slate-100 rounded-3xl outline-none focus:border-blue-700 text-2xl font-medium transition-all" required />
+            </div>
+            <button type="submit" className="w-full bg-blue-700 text-white p-7 rounded-[30px] font-bold text-2xl flex items-center justify-center gap-3 hover:bg-blue-800 transition-all shadow-2xl shadow-blue-200 active:scale-95">
+              <UserCheck size={28} /> Autenticar No Sistema
+            </button>
+          </form>
+          <p className="mt-8 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">Acesso restrito à rede municipal</p>
         </div>
       </div>
     );
@@ -52,45 +74,53 @@ export default function SistemaCRAS() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <header className="bg-blue-700 text-white p-6 shadow-lg border-b-4 border-yellow-500">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <img src="/brasao.sjp.jfif" className="w-16 h-16 bg-white rounded-lg p-1" />
+      <header className="bg-blue-700 text-white p-8 shadow-lg border-b-8 border-yellow-500">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <img src="/brasao.sjp.jfif" className="w-24 h-24 bg-white rounded-2xl p-2 shadow-inner" />
             <div>
-              <h1 className="text-2xl font-bold uppercase tracking-tight">CRAS Digital</h1>
-              <p className="text-sm opacity-90 font-medium">São João da Ponta - PA</p>
+              <h1 className="text-4xl font-black uppercase tracking-tighter italic">CRAS Digital</h1>
+              <p className="text-lg opacity-90 font-bold uppercase tracking-widest">São João da Ponta - Pará</p>
             </div>
           </div>
-          <button onClick={() => setAutenticado(false)} className="text-xs font-bold uppercase border border-blue-400 px-4 py-2 rounded-lg hover:bg-blue-900 transition-all flex items-center gap-2"><LogOut size={16} /> Sair</button>
+          <button onClick={() => setAutenticado(false)} className="flex items-center gap-3 text-sm font-black uppercase border-4 border-blue-400 px-8 py-4 rounded-2xl hover:bg-blue-800 transition-all">
+            <LogOut size={24} /> Sair do Portal
+          </button>
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col md:flex-row max-w-6xl mx-auto w-full p-6 gap-6">
-        <aside className="w-full md:w-64 space-y-2">
-          <button onClick={() => setAbaAtiva('busca')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${abaAtiva === 'busca' ? 'bg-blue-700 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-blue-50'}`}><Search size={20} /> Consulta de Usuários</button>
-          <button onClick={() => setAbaAtiva('paif')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${abaAtiva === 'paif' ? 'bg-blue-700 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-blue-50'}`}><BookOpen size={20} /> Gestão do PAIF</button>
-          <button onClick={() => setAbaAtiva('scfv')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${abaAtiva === 'scfv' ? 'bg-blue-700 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-blue-50'}`}><Users size={20} /> Oficinas SCFV</button>
+      <div className="flex-1 flex flex-col md:flex-row max-w-7xl mx-auto w-full p-8 gap-10">
+        <aside className="w-full md:w-80 space-y-4">
+          <button onClick={() => setAbaAtiva('busca')} className={`w-full flex items-center gap-4 p-6 rounded-3xl transition-all font-black text-2xl ${abaAtiva === 'busca' ? 'bg-blue-700 text-white shadow-2xl translate-x-2' : 'bg-white border-2 text-slate-400 hover:bg-blue-50'}`}>
+            <Search size={28} /> Consulta
+          </button>
+          <button onClick={() => setAbaAtiva('paif')} className={`w-full flex items-center gap-4 p-6 rounded-3xl transition-all font-black text-2xl ${abaAtiva === 'paif' ? 'bg-blue-700 text-white shadow-2xl translate-x-2' : 'bg-white border-2 text-slate-400 hover:bg-blue-50'}`}>
+            <BookOpen size={28} /> Gestão PAIF
+          </button>
+          <button onClick={() => setAbaAtiva('scfv')} className={`w-full flex items-center gap-4 p-6 rounded-3xl transition-all font-black text-2xl ${abaAtiva === 'scfv' ? 'bg-blue-700 text-white shadow-2xl translate-x-2' : 'bg-white border-2 text-slate-400 hover:bg-blue-50'}`}>
+            <Users size={28} /> Grupos SCFV
+          </button>
         </aside>
 
-        <main className="flex-1 bg-white rounded-3xl shadow-sm border p-8 min-h-[550px]">
+        <main className="flex-1 bg-white rounded-[50px] shadow-sm border-2 p-12 min-h-[600px]">
           {abaAtiva === 'busca' && (
             <div className="animate-in fade-in">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2"><ClipboardList className="text-blue-700" /> Prontuários</h2>
-                <button onClick={() => setMostrarForm(true)} className="bg-green-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg hover:bg-green-700 flex items-center gap-2 animate-pulse"><UserPlus size={20} /> Novo Registro</button>
+              <div className="flex justify-between items-center mb-12">
+                <h2 className="text-4xl font-black text-slate-800 uppercase tracking-tighter">Prontuário Eletrônico</h2>
+                <button onClick={() => setMostrarForm(true)} className="bg-green-600 text-white px-10 py-5 rounded-3xl font-black text-xl shadow-xl hover:bg-green-700 flex items-center gap-3 transition-all active:scale-95"><UserPlus size={28} /> Novo Registro</button>
               </div>
-              <div className="flex gap-4 mb-10 bg-slate-50 p-2 rounded-2xl border">
-                <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Localizar Usuário..." className="flex-1 p-4 bg-transparent outline-none font-medium text-slate-700" />
-                <button onClick={realizarBusca} className="bg-blue-700 text-white px-8 rounded-xl font-bold hover:bg-blue-800 transition-all">{buscando ? <Loader2 className="animate-spin" /> : "Filtrar"}</button>
+              <div className="flex gap-4 mb-12 bg-slate-50 p-4 rounded-[35px] border-4 border-slate-100 shadow-inner">
+                <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Pesquisar Nome do Usuário..." className="flex-1 p-6 bg-transparent outline-none font-bold text-3xl text-slate-700" />
+                <button onClick={realizarBusca} className="bg-blue-700 text-white px-12 rounded-[25px] font-black text-2xl hover:bg-blue-800 transition-all">{buscando ? <Loader2 className="animate-spin" /> : "FILTRAR"}</button>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {usuariosEncontrados.map((u) => (
-                  <div key={u.id} className="p-6 border rounded-2xl flex justify-between items-center bg-white hover:border-blue-400 transition-all shadow-sm">
+                  <div key={u.id} className="p-10 border-4 border-slate-50 rounded-[40px] flex justify-between items-center bg-white hover:border-blue-400 transition-all shadow-sm">
                     <div>
-                      <h3 className="font-bold text-slate-800 uppercase">{u.nome_responsavel}</h3>
-                      <p className="text-sm text-slate-500 font-medium">CPF: {u.cpf} | NIS: {u.nis || '---'}</p>
+                      <h3 className="text-3xl font-black text-slate-800 uppercase tracking-tighter">{u.nome_responsavel}</h3>
+                      <p className="text-xl text-slate-400 font-bold mt-2 uppercase tracking-widest">CPF: {u.cpf} | NIS: {u.nis || '---'}</p>
                     </div>
-                    <button className="text-blue-700 font-bold text-sm border-2 border-blue-700 px-4 py-2 rounded-xl hover:bg-blue-700 hover:text-white transition-all">Ver Ficha Técnica</button>
+                    <button className="text-blue-700 font-black text-xl border-4 border-blue-700 px-8 py-4 rounded-2xl hover:bg-blue-700 hover:text-white transition-all">ABRIR FICHA</button>
                   </div>
                 ))}
               </div>
@@ -98,96 +128,58 @@ export default function SistemaCRAS() {
           )}
 
           {abaAtiva === 'paif' && (
-            <div className="animate-in fade-in space-y-8">
-              <h2 className="text-2xl font-bold text-slate-800 border-b pb-4">Indicadores de Acompanhamento (PAIF)</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 bg-blue-50 rounded-3xl border-b-4 border-blue-700 shadow-sm">
-                  <BarChart3 className="text-blue-700 mb-2" size={24} />
-                  <p className="text-xs font-bold text-blue-800 uppercase">Famílias Ativas</p>
-                  <p className="text-4xl font-black text-blue-900 mt-1">128</p>
-                </div>
-                <div className="p-6 bg-orange-50 rounded-3xl border-b-4 border-orange-500 shadow-sm">
-                  <Calendar className="text-orange-600 mb-2" size={24} />
-                  <p className="text-xs font-bold text-orange-800 uppercase">Visitas para Hoje</p>
-                  <p className="text-4xl font-black text-orange-700 mt-1">04</p>
-                </div>
-                <div className="p-6 bg-red-50 rounded-3xl border-b-4 border-red-600 shadow-sm">
-                  <AlertCircle className="text-red-600 mb-2" size={24} />
-                  <p className="text-xs font-bold text-red-800 uppercase">Vulnerabilidade Alta</p>
-                  <p className="text-4xl font-black text-red-700 mt-1">12</p>
-                </div>
-              </div>
-              <div className="mt-8 bg-slate-50 p-6 rounded-3xl border border-slate-200">
-                <h4 className="font-bold text-slate-700 mb-4 uppercase text-xs tracking-widest">Agenda Técnica Semanal</h4>
-                <div className="space-y-3">
-                  <div className="bg-white p-4 rounded-xl border flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-600">Terça-feira • 09:00</span>
-                    <span className="text-sm text-slate-500 italic font-medium tracking-tight">Visita Domiciliar - Bairro Magalhães</span>
-                    <span className="bg-blue-100 text-blue-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase">Agendado</span>
+            <div className="animate-in fade-in space-y-12">
+               <h2 className="text-4xl font-black text-slate-800 border-b-4 pb-8 uppercase tracking-tighter">Indicadores PAIF</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="p-10 bg-blue-50 rounded-[45px] border-b-[12px] border-blue-700 shadow-xl">
+                     <p className="text-lg font-black text-blue-800 uppercase mb-4 tracking-widest text-center">Famílias Ativas</p>
+                     <p className="text-8xl font-black text-blue-900 tracking-tighter text-center">128</p>
                   </div>
-                </div>
-              </div>
+                  <div className="p-10 bg-red-50 rounded-[45px] border-b-[12px] border-red-600 shadow-xl">
+                     <p className="text-lg font-black text-red-800 uppercase mb-4 tracking-widest text-center">Em Vulnerabilidade</p>
+                     <p className="text-8xl font-black text-red-700 tracking-tighter text-center">12</p>
+                  </div>
+               </div>
             </div>
           )}
 
           {abaAtiva === 'scfv' && (
-            <div className="animate-in fade-in space-y-6">
-              <div className="flex justify-between items-center border-b pb-4">
-                <h2 className="text-2xl font-bold text-slate-800">Oficinas e Grupos SCFV</h2>
-                <button className="bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase">+ Novo Grupo</button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-5 border rounded-3xl bg-white shadow-sm hover:shadow-md transition-all">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="bg-green-100 p-3 rounded-2xl text-green-700"><Users size={24}/></div>
-                    <span className="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase italic">Ativo</span>
-                  </div>
-                  <h3 className="font-bold text-slate-800 text-lg">Grupo Reviver (Idosos)</h3>
-                  <p className="text-xs text-slate-500 font-medium mb-4 italic">Encontros: Quartas-feiras • 08:30h</p>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div className="bg-green-500 w-[80%] h-full"></div>
-                  </div>
-                  <p className="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-widest text-right">24 / 30 Vagas preenchidas</p>
-                </div>
-
-                <div className="p-5 border rounded-3xl bg-white shadow-sm hover:shadow-md transition-all">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="bg-blue-100 p-3 rounded-2xl text-blue-700"><Users size={24}/></div>
-                    <span className="bg-blue-100 text-blue-700 text-[10px] px-2 py-1 rounded-full font-bold uppercase italic">Inscrições Abertas</span>
-                  </div>
-                  <h3 className="font-bold text-slate-800 text-lg">Juventude SJP (15 a 17 anos)</h3>
-                  <p className="text-xs text-slate-500 font-medium mb-4 italic">Encontros: Sextas-feiras • 14:00h</p>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div className="bg-blue-500 w-[40%] h-full"></div>
-                  </div>
-                  <p className="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-widest text-right">08 / 20 Vagas preenchidas</p>
-                </div>
+            <div className="animate-in fade-in space-y-8">
+              <h2 className="text-4xl font-black text-slate-800 border-b-4 pb-8 uppercase tracking-tighter">Serviço de Convivência</h2>
+              <div className="p-20 border-8 border-dotted rounded-[60px] text-center bg-slate-50 border-slate-200">
+                <Users size={80} className="mx-auto text-slate-200 mb-6" />
+                <p className="text-3xl text-slate-300 font-black uppercase tracking-tighter">Carregando Oficinas...</p>
               </div>
             </div>
           )}
         </main>
       </div>
 
-      {/* MODAL DE CADASTRO TÉCNICO */}
+      {/* FORMULÁRIO DE CADASTRO TÉCNICO */}
       {mostrarForm && (
-        <div className="fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-white rounded-[40px] w-full max-w-lg p-10 shadow-2xl animate-in zoom-in duration-300">
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-100 p-2 rounded-lg text-blue-700"><UserPlus size={24}/></div>
-                <h2 className="text-xl font-bold text-slate-800">Abertura de Prontuário</h2>
-              </div>
-              <button onClick={() => setMostrarForm(false)} className="bg-slate-50 p-2 rounded-full text-slate-400 hover:text-red-500 transition-colors"><X /></button>
+        <div className="fixed inset-0 bg-slate-900/70 flex items-center justify-center p-4 z-50 backdrop-blur-lg">
+          <div className="bg-white rounded-[50px] w-full max-w-3xl p-14 shadow-2xl animate-in zoom-in duration-300 border-t-[16px] border-blue-700">
+            <div className="flex justify-between items-center mb-12">
+              <h2 className="text-4xl font-black text-slate-800 uppercase tracking-tighter italic">Novo Prontuário</h2>
+              <button onClick={() => setMostrarForm(false)} className="text-slate-300 hover:text-red-500 transition-colors"><X size={48} /></button>
             </div>
-            <form onSubmit={salvarCadastro} className="space-y-5">
-              <input placeholder="Nome Completo do Responsável" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-blue-700 transition-all font-medium" required onChange={e => setFormData({...formData, nome_responsavel: e.target.value})} />
-              <div className="grid grid-cols-2 gap-4">
-                <input placeholder="CPF (Apenas números)" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-blue-700 transition-all font-medium" required onChange={e => setFormData({...formData, cpf: e.target.value})} />
-                <input placeholder="NIS" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-blue-700 transition-all font-medium" onChange={e => setFormData({...formData, nis: e.target.value})} />
+            <form onSubmit={salvarCadastro} className="space-y-8">
+              <div className="space-y-2">
+                <label className="text-xs font-black text-slate-400 uppercase ml-4">Nome Completo do Responsável</label>
+                <input className="w-full p-7 bg-slate-50 border-4 border-slate-100 rounded-3xl text-2xl font-bold outline-none focus:border-blue-700 transition-all" required onChange={e => setFormData({...formData, nome_responsavel: e.target.value})} />
               </div>
-              <textarea placeholder="Endereço da Residência" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-blue-700 transition-all font-medium" rows="3" onChange={e => setFormData({...formData, endereco: e.target.value})}></textarea>
-              <button disabled={loading} className="w-full bg-blue-700 text-white p-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-800 shadow-xl shadow-blue-200 transition-all active:scale-95">
-                {loading ? "Processando..." : <><Save size={22} /> Confirmar Cadastro Governamental</>}
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase ml-4">CPF</label>
+                  <input className="w-full p-7 bg-slate-50 border-4 border-slate-100 rounded-3xl text-2xl font-bold outline-none focus:border-blue-700" required onChange={e => setFormData({...formData, cpf: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase ml-4">NIS</label>
+                  <input className="w-full p-7 bg-slate-50 border-4 border-slate-100 rounded-3xl text-2xl font-bold outline-none focus:border-blue-700" onChange={e => setFormData({...formData, nis: e.target.value})} />
+                </div>
+              </div>
+              <button disabled={loading} className="w-full bg-blue-700 text-white p-8 rounded-[35px] font-black text-3xl hover:bg-blue-800 shadow-2xl transition-all shadow-blue-200">
+                {loading ? "PROCESSANDO..." : "CONFIRMAR REGISTRO"}
               </button>
             </form>
           </div>
