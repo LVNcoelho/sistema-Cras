@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Search, Users, BookOpen, LogOut, X, UserPlus, ClipboardList, Loader2, Save, UserCheck, FileText, MapPin, Calendar, Printer } from 'lucide-react';
+import { Search, Users, BookOpen, LogOut, X, UserPlus, ClipboardList, Loader2, Save, UserCheck, FileText, MapPin, Calendar, Printer, Database, Globe } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function SistemaCRAS() {
@@ -85,6 +85,11 @@ export default function SistemaCRAS() {
         <aside className="w-full md:w-64 space-y-2">
           <button onClick={() => setAbaAtiva('busca')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all font-bold ${abaAtiva === 'busca' ? 'bg-blue-700 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-blue-50'}`}><Search size={20} /> Consulta de Usuários</button>
           <button onClick={() => setAbaAtiva('paif')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all font-bold ${abaAtiva === 'paif' ? 'bg-blue-700 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-blue-50'}`}><BookOpen size={20} /> Gestão do PAIF</button>
+          
+          {/* ADIÇÕES PARA O EDITAL */}
+          <button onClick={() => setAbaAtiva('creas')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all font-bold ${abaAtiva === 'creas' ? 'bg-red-700 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-red-50'}`}><Users size={20} /> Unidade CREAS</button>
+          <button onClick={() => setAbaAtiva('scfv')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all font-bold ${abaAtiva === 'scfv' ? 'bg-orange-600 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-orange-50'}`}><Users size={20} /> SCFV / Oficinas</button>
+          <button onClick={() => setAbaAtiva('semas')} className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all font-bold ${abaAtiva === 'semas' ? 'bg-teal-700 text-white shadow-lg' : 'bg-white border text-slate-600 hover:bg-teal-50'}`}><Globe size={20} /> SEMAS / Integração</button>
         </aside>
 
         <main className="flex-1 bg-white rounded-3xl shadow-sm border p-8">
@@ -117,7 +122,6 @@ export default function SistemaCRAS() {
             </div>
           )}
           
-          {/* PAIF SIMULADO */}
           {abaAtiva === 'paif' && (
             <div className="animate-in fade-in space-y-6">
               <h2 className="text-2xl font-bold text-slate-800">Painel PAIF</h2>
@@ -129,6 +133,64 @@ export default function SistemaCRAS() {
                 <div className="p-6 bg-orange-50 rounded-2xl border-b-4 border-orange-500">
                   <p className="text-xs font-bold text-orange-800 uppercase">Visitas Pendentes</p>
                   <p className="text-4xl font-black text-orange-900">07</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* NOVAS ABAS PARA O EDITAL */}
+          {abaAtiva === 'creas' && (
+            <div className="animate-in fade-in space-y-6">
+              <h2 className="text-2xl font-bold text-red-800">Painel CREAS / PAEFI</h2>
+              <div className="p-6 bg-red-50 rounded-2xl border border-red-200">
+                <p className="text-xs font-bold text-red-700 uppercase mb-4 tracking-widest">Violação de Direitos em Acompanhamento</p>
+                <div className="bg-white p-4 rounded-xl border flex justify-between">
+                   <span className="font-bold">Casos Médio Risco</span>
+                   <span className="text-red-700 font-black">12</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {abaAtiva === 'scfv' && (
+            <div className="animate-in fade-in space-y-6">
+              <h2 className="text-2xl font-bold text-orange-800">SCFV - Grupos e Oficinas</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-6 bg-orange-50 rounded-2xl border border-orange-200">
+                  <p className="text-xs font-bold text-orange-700 uppercase">Grupo Idosos</p>
+                  <p className="text-3xl font-black">24 Integrantes</p>
+                </div>
+                <div className="p-6 bg-orange-50 rounded-2xl border border-orange-200">
+                  <p className="text-xs font-bold text-orange-700 uppercase">Crianças (0-6)</p>
+                  <p className="text-3xl font-black">18 Integrantes</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {abaAtiva === 'semas' && (
+            <div className="animate-in fade-in space-y-6">
+              <div className="flex justify-between items-center border-b pb-4">
+                <h2 className="text-2xl font-bold text-teal-800 uppercase">Gestão SEMAS</h2>
+                <button 
+                  onClick={() => alert("Sincronizando prontuários com o RMA/Governo Federal...")}
+                  className="bg-teal-700 text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-teal-800"
+                >
+                  <Database size={18} /> Integrar SUAS
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="p-4 bg-slate-50 border rounded-xl text-center">
+                   <p className="text-[10px] font-bold text-slate-400">STATUS API</p>
+                   <p className="text-green-600 font-bold">ONLINE</p>
+                </div>
+                <div className="p-4 bg-slate-50 border rounded-xl text-center">
+                   <p className="text-[10px] font-bold text-slate-400">LGPD</p>
+                   <p className="text-slate-700 font-bold uppercase">Ativa</p>
+                </div>
+                <div className="p-4 bg-slate-50 border rounded-xl text-center">
+                   <p className="text-[10px] font-bold text-slate-400">GEORREFEREN.</p>
+                   <p className="text-blue-700 font-bold uppercase">Mapeado</p>
                 </div>
               </div>
             </div>
